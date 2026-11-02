@@ -35,14 +35,18 @@ function renderRuns(payload) {
 
     const statusCell = document.createElement('td');
     const status = document.createElement('span');
-    status.className = `run-status ${run.recipeLabeled ? 'analyzed' : 'available'}`;
-    status.textContent = run.recipeLabeled ? 'Verified recipe analysis' : 'Source available for labeling';
+    status.className = 'run-status available';
+    status.textContent = run.analysisStatus === 'AVAILABLE_NOT_VERIFIED'
+      ? 'Replay installed, not yet verified'
+      : run.analysisStatus === 'DATA_UNAVAILABLE'
+        ? 'Restricted replay data not installed'
+        : 'Inventory only, no recipe labels';
     statusCell.append(status);
     row.append(statusCell);
     runRows.append(row);
   });
 
-  datasetLoadStatus.textContent = 'Manifest loaded';
+  datasetLoadStatus.textContent = 'Dataset inventory loaded';
   datasetLoadStatus.classList.add('load-ok');
 }
 

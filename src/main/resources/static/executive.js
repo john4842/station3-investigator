@@ -8,9 +8,8 @@ const contextJoin = document.querySelector('#context-join');
 const contextTiming = document.querySelector('#context-timing');
 const contextContract = document.querySelector('#context-contract');
 
-fetch('/api/analyze/canonical', { method: 'POST' })
-  .then(response => response.ok ? response.json() : Promise.reject(new Error('evidence unavailable')))
-  .then(payload => {
+function renderExecutive(payload, cameraEvidenceAvailable) {
+  try {
     const recipe7 = payload.assessments.find(item => item.recipeId === 7);
     if (!recipe7 || payload.provenanceStatus !== 'VERIFIED_CANONICAL_SOURCE') {
       throw new Error('verified Recipe 7 evidence unavailable');
@@ -33,8 +32,12 @@ fetch('/api/analyze/canonical', { method: 'POST' })
     contextContract.textContent = `${contract.frameCount} indexed fill frames verified by contract: ${contract.inFillFrames} in-fill and ${contract.betweenFillFrames} between fills.`;
     decisionStatus.textContent = 'Run 5 checked';
     decisionStatus.classList.add('verified');
-  })
-  .catch(error => {
+    document.querySelector('#canonical-brief').hidden = false;
+    document.querySelector('#canonical-evidence').hidden = !cameraEvidenceAvailable;
+    if (cameraEvidenceAvailable) {
+      document.querySelectorAll('img[data-src]').forEach(image => { image.src = image.dataset.src; });
+    }
+  } catch (error) {
     findingFirst.textContent = 'Unavailable';
     findingLater.textContent = 'Unavailable';
     findingStable.textContent = 'Unavailable';
@@ -45,7 +48,10 @@ fetch('/api/analyze/canonical', { method: 'POST' })
     contextTiming.textContent = 'Timing context unavailable.';
     contextContract.textContent = 'Source contract unavailable.';
     decisionStatus.classList.add('failed');
-  });
+    document.querySelector('#canonical-brief').hidden = true;
+    document.querySelector('#canonical-evidence').hidden = true;
+  }
+}
 
 function formatDelta(value) {
   return Number.isFinite(value) ? value.toFixed(3) : 'Unavailable';

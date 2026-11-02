@@ -13,6 +13,8 @@ const resultContext = document.querySelector('#result-context');
 const sourceBundle = document.querySelector('#sourceBundle');
 const sourceBundleName = document.querySelector('#source-bundle-name');
 let latestResult = null;
+const syntheticSubmit = document.querySelector('#synthetic-submit');
+let capabilities = {canonicalAvailable: false, uploadAvailable: false, cameraEvidenceAvailable: false};
 
 sourceBundle.addEventListener('change', () => {
   const file = sourceBundle.files[0];
@@ -20,12 +22,31 @@ sourceBundle.addEventListener('change', () => {
   sourceBundleName.classList.toggle('selected', Boolean(file));
 });
 
-fetch('/api/health')
-  .then(response => response.ok ? response.json() : Promise.reject(new Error('unavailable')))
-  .then(() => setHealth('Ready', 'ok'))
-  .catch(() => setHealth('Unavailable', 'error'));
+async function initialize() {
+  try {
+    const response = await fetch('/api/health');
+    if (!response.ok) throw new Error('Service unavailable');
+    const payload = await response.json();
+    if (!payload.capabilities) throw new Error('Data availability could not be checked');
+    capabilities = payload.capabilities;
+    canonicalSubmit.disabled = !capabilities.canonicalAvailable;
+    uploadSubmit.disabled = !capabilities.uploadAvailable;
+    document.querySelector('#availability-message').textContent = capabilities.canonicalAvailable
+      ? 'Run 5 replay files are installed. Results appear only after verification.'
+      : 'Run 5 data is not installed. The synthetic example is available. See SOURCE_ASSETS.md for authorized local replay.';
+    setHealth(capabilities.canonicalAvailable ? 'Service online' : 'Service online · synthetic mode', 'ok');
+    if (capabilities.canonicalAvailable) canonicalSubmit.click();
+    else syntheticSubmit.click();
+  } catch (error) {
+    canonicalSubmit.disabled = true;
+    uploadSubmit.disabled = true;
+    setHealth('Service unavailable', 'error');
+    document.querySelector('#availability-message').textContent = 'Could not check installed data. Retry after the service is available.';
+  }
+}
 
 canonicalSubmit.addEventListener('click', async () => {
+  if (!capabilities.canonicalAvailable) return;
   canonicalSubmit.disabled = true;
   clearResult();
   setMessage('Verifying saved measurements and computing recipe comparisons…');
@@ -35,12 +56,13 @@ canonicalSubmit.addEventListener('click', async () => {
   } catch (error) {
     showAnalysisError(error);
   } finally {
-    canonicalSubmit.disabled = false;
+    canonicalSubmit.disabled = !capabilities.canonicalAvailable;
   }
 });
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
+  if (!capabilities.uploadAvailable) return;
   uploadSubmit.disabled = true;
   clearResult();
   setMessage('Inspecting the uploaded frames…');
@@ -50,16 +72,29 @@ form.addEventListener('submit', async event => {
   } catch (error) {
     showAnalysisError(error);
   } finally {
-    uploadSubmit.disabled = false;
+    uploadSubmit.disabled = !capabilities.uploadAvailable;
   }
 });
 
-// Show the verified replay on first load. The button remains available for a manual refresh.
-canonicalSubmit.click();
+syntheticSubmit.addEventListener('click', async () => {
+  syntheticSubmit.disabled = true;
+  clearResult();
+  setMessage('Running synthetic measurements, not plant evidence…');
+  try {
+    await handleResponse(await fetch('/api/analyze/synthetic', {method: 'POST'}));
+  } catch (error) {
+    showAnalysisError(error);
+  } finally {
+    syntheticSubmit.disabled = false;
+  }
+});
+initialize();
 
 function clearResult() {
   latestResult = null;
   results.hidden = true;
+  document.querySelector('#canonical-brief').hidden = true;
+  document.querySelector('#canonical-evidence').hidden = true;
 }
 
 function showAnalysisError(error) {
@@ -76,7 +111,8 @@ async function handleResponse(response) {
     if (!response.ok) throw new Error(payload.message || 'Analysis failed');
     render(payload);
     latestResult = payload;
-    const disposition = payload.provenanceStatus === 'VERIFIED_CANONICAL_SOURCE' ? 'verified' : 'unverified';
+    const disposition = payload.synthetic ? 'synthetic, not plant evidence'
+      : payload.provenanceStatus === 'VERIFIED_CANONICAL_SOURCE' ? 'verified' : 'unverified';
     setMessage(`Done. ${payload.measurementRows} vial measurements and ${payload.assessmentCount} recipe results, ${disposition}.`, 'success');
   } catch (error) {
     showAnalysisError(error);
@@ -131,7 +167,9 @@ function render(payload) {
     rows.append(row);
   });
   results.hidden = false;
-
+  if (payload.provenanceStatus === 'VERIFIED_CANONICAL_SOURCE') {
+    renderExecutive(payload, capabilities.cameraEvidenceAvailable);
+  }
 }
 
 function renderReceipt(value) {
@@ -189,6 +227,7 @@ function statusLabel(status) {
 }
 
 function evidenceTypeLabel(value) {
+  if (value === 'SYNTHETIC_FIXTURE') return 'Synthetic, not plant evidence';
   if (value === 'CANONICAL_VIDEO_5_REPLAY') return 'Verified replay';
   if (value === 'UNVERIFIED_UPLOAD') return 'Unverified upload';
   return 'Unknown';
@@ -226,7 +265,9 @@ function setMessage(text, state = '') {
 function htmlReport(payload) {
   const bodyRows = payload.assessments.map(item => `<tr><td>${item.recipeId}</td><td>${escapeHtml(statusLabel(item.status))}</td><td>${escapeHtml(humanize(item.batchConsistency))}</td><td>${escapeHtml(humanize(item.recipeConformity))}</td><td>${item.acceptedMeasurements}/${item.expectedVials}</td><td>${formatNumber(item.withinBatchMetrics?.vial1ToVial2DeltaE00)}</td><td>${formatNumber(item.withinBatchMetrics?.vial1ToVial3DeltaE00)}</td><td>${formatNumber(item.withinBatchMetrics?.vial2ToVial3DeltaE00)}</td><td>${formatNumber(item.firstToLaterMeanDeltaE00)}</td><td>${formatNumber(item.predecessorDeltaE00)}</td><td>${escapeHtml((item.rejectionReasons || []).join('; '))}</td></tr>`).join('');
   const evidence = payload.extractionReceipt || {};
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Station 3 evidence report</title><style>body{font:15px system-ui;max-width:1300px;margin:40px auto;color:#172b42}table{width:100%;border-collapse:collapse}th,td{padding:9px;border:1px solid #ccd5df;text-align:left}th{background:#f3f6f9}code{word-break:break-all}.note{padding:12px;background:#fff8e8}</style></head><body><h1>Station 3 evidence report</h1><p class="note">Retrospective evidence only. The visual pattern supports investigating carryover; it does not prove carryover. Vial 3 is a provisional dataset-specific reference, not independent recipe truth.</p><p><strong>mode:</strong> ${escapeHtml(evidence.replayMode || payload.evidenceType)}</p><p><strong>analysis policy:</strong> ${escapeHtml(payload.analysisPolicyVersion || 'not supplied')} — ${escapeHtml(payload.thresholdInterpretation || 'not supplied')}</p><p><strong>source video sha-256:</strong> <code>${escapeHtml(evidence.sourceVideoSha256 || 'not verified')}</code></p><p><strong>manifest sha-256:</strong> <code>${escapeHtml(evidence.manifestSha256 || 'not verified')}</code></p><p><strong>extractor sha-256:</strong> <code>${escapeHtml(evidence.extractorSha256 || 'not verified')}</code></p><p><strong>evidence:</strong> ${evidence.acceptedVials ?? 0} accepted, ${evidence.rejectedVials ?? 0} rejected</p><table><thead><tr><th>recipe</th><th>status</th><th>batch consistency</th><th>recipe conformity</th><th>valid vials</th><th>vial 1–2 ΔE00</th><th>vial 1–3 ΔE00</th><th>vial 2–3 ΔE00</th><th>vial 1 vs later mean ΔE00</th><th>predecessor ΔE00</th><th>reasons</th></tr></thead><tbody>${bodyRows}</tbody></table>${investigationHtml(payload)}</body></html>`;
+  const accepted = payload.assessments.reduce((sum, item) => sum + item.acceptedMeasurements, 0);
+  const rejected = payload.assessments.reduce((sum, item) => sum + item.expectedVials - item.acceptedMeasurements, 0);
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Station 3 evidence report</title><style>body{font:15px system-ui;max-width:1300px;margin:40px auto;color:#172b42}table{width:100%;border-collapse:collapse}th,td{padding:9px;border:1px solid #ccd5df;text-align:left}th{background:#f3f6f9}code{word-break:break-all}.note{padding:12px;background:#fff8e8}</style></head><body><h1>Station 3 evidence report</h1><p class="note">${payload.synthetic ? 'SYNTHETIC EXAMPLE: not plant evidence.' : 'Retrospective evidence only. Color differences do not prove carryover.'} Vial 3 is a provisional within-recipe reference, not independent recipe truth.</p><p><strong>mode:</strong> ${escapeHtml(evidence.replayMode || payload.evidenceType)}</p><p><strong>analysis policy:</strong> ${escapeHtml(payload.analysisPolicyVersion || 'not supplied')} — ${escapeHtml(payload.thresholdInterpretation || 'not supplied')}</p><p><strong>source video sha-256:</strong> <code>${escapeHtml(evidence.sourceVideoSha256 || 'not verified')}</code></p><p><strong>manifest sha-256:</strong> <code>${escapeHtml(evidence.manifestSha256 || 'not verified')}</code></p><p><strong>extractor sha-256:</strong> <code>${escapeHtml(evidence.extractorSha256 || 'not verified')}</code></p><p><strong>evidence:</strong> ${accepted} accepted, ${rejected} rejected</p><table><thead><tr><th>recipe</th><th>status</th><th>batch consistency</th><th>recipe conformity</th><th>valid vials</th><th>vial 1–2 ΔE00</th><th>vial 1–3 ΔE00</th><th>vial 2–3 ΔE00</th><th>vial 1 vs later mean ΔE00</th><th>predecessor ΔE00</th><th>reasons</th></tr></thead><tbody>${bodyRows}</tbody></table>${investigationHtml(payload)}</body></html>`;
 }
 
 function escapeHtml(value) {
@@ -236,7 +277,9 @@ function escapeHtml(value) {
 
 function investigationHtml(payload) {
   const evidence = payload.investigation;
-  if (!evidence) return '<p>Recipe process context is unavailable for this source.</p>';
+  if (!evidence) return payload.synthetic
+    ? '<p>Synthetic example: six invented vial measurements across two recipes. No organizer data, camera extraction, or manufacturing conclusion is represented.</p>'
+    : '<p>Recipe process context is unavailable for this source.</p>';
   const recipeText = recipe => recipe
     ? 'Recipe ' + recipe.recipeId + ': T100 = ' + recipe.requestedMl.T100 + ' mL; T200 = ' + recipe.requestedMl.T200 + ' mL; T400 = ' + recipe.requestedMl.T400 + ' mL. Dispense order: ' + recipe.dispenseOrder + '.'
     : 'None in this recording.';
@@ -262,4 +305,3 @@ function investigationHtml(payload) {
     + Object.entries(evidence.capabilities).map(([key,value]) => '<li>' + escapeHtml(key.replace(/([A-Z])/g, ' $1')) + ': ' + escapeHtml(humanize(value)) + '</li>').join('')
     + '</ul></details>';
 }
-

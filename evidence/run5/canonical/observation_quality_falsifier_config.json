@@ -1,0 +1,47 @@
+{
+  "schema": "station3-observation-quality-falsifier/v2",
+  "video_id": 5,
+  "fps": 30.0,
+  "pre_end_window_seconds": [1.5, 0.5],
+  "window_sample_count": 5,
+  "timing_shifts_seconds": [-0.5, 0.0, 0.5],
+  "liquid_mask_polygon_xy": [[290, 326], [332, 326], [331, 379], [325, 390], [297, 390], [289, 379]],
+  "mask_morphology_pixels": [-4, 0, 4],
+  "minimum_mask_pixels": 1000,
+  "liquid_occupancy": {
+    "minimum_fraction": 0.85,
+    "minimum_hsv_saturation": 35,
+    "maximum_dark_value": 100
+  },
+  "vial_presence_proxy": {
+    "left_wall_strip_xyxy": [275, 265, 292, 390],
+    "right_wall_strip_xyxy": [330, 265, 347, 390],
+    "minimum_left_wall_sobel_x_p75": 40.0,
+    "minimum_right_wall_sobel_x_p75": 10.0
+  },
+  "occlusion_proxy": {
+    "minimum_largest_occupancy_component_fraction": 0.85,
+    "maximum_internal_canny_edge_fraction": 0.10,
+    "canny_thresholds": [60, 140]
+  },
+  "image_quality": {
+    "maximum_highlight_clip_fraction": 0.05,
+    "minimum_focus_laplacian_variance": 250.0,
+    "maximum_window_delta_e00_from_median": 6.0
+  },
+  "focus_crop_xyxy": [270, 300, 350, 410],
+  "white_reference_xyxy": [70, 75, 230, 135],
+  "white_balance_gain_limits": [0.5, 2.0],
+  "white_reference_quality": {
+    "minimum_median_channel": 140,
+    "maximum_median_channel": 220,
+    "maximum_channel_median_spread": 20,
+    "maximum_clip_fraction": 0.01
+  },
+  "geometry_provenance": {
+    "method": "one fixed six-point polygon frozen after manual inspection of representative video 5 frames",
+    "claim": "expected lower liquid-column region only; not a learned vial localizer",
+    "independent_proxy": "colored-or-dark occupancy and continuity inside the frozen polygon, internal edge obstruction, and expected left and right vial-wall gradient evidence",
+    "known_limit": "these image proxies do not prove physical vial identity or causal carryover"
+  }
+}

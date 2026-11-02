@@ -38,6 +38,18 @@
     </dependency>
   </dependencies>
   <build>
+    <resources>
+      <resource>
+        <directory>evidence/run5</directory>
+        <includes><include>canonical/**</include><include>source/**</include><include>static/**</include></includes>
+      </resource>
+      <resource><directory>src/main/resources</directory></resource>
+      <resource>
+        <directory>fixtures</directory>
+        <targetPath>synthetic</targetPath>
+        <includes><include>synthetic_manifest.csv</include><include>synthetic_measurements.csv</include></includes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -59,7 +71,7 @@
     <profile>
       <id>canonical-data</id>
       <activation>
-        <file><exists>src/main/resources/canonical/observations.csv</exists></file>
+        <file><exists>evidence/run5/canonical/observations.csv</exists></file>
       </activation>
       <properties><excludedTestGroups>none</excludedTestGroups></properties>
     </profile>

@@ -1,66 +1,61 @@
-# Source assets
+# Demonstration evidence
 
-## Public source
+The repository includes the Run 5 replay bundle used in the recorded
+Station 3 Investigator demonstration. It is not replaced by synthetic data.
 
-This distribution contains code and synthetic fixtures, not the organizer
-dataset. No permission to redistribute the organizer assets publicly has been
-confirmed. Keep them out of public repositories, releases, screenshots, and
-bundled JARs until permission is established.
+## Included files
 
-The synthetic CLI example in [README.md](README.md) needs no external data.
+Maven copies `evidence/run5` into the application resources without filtering.
 
-## Full Run 5 replay
-
-The original replay uses organizer recipe records and project-derived
-observations. An organizer download alone is not the complete replay bundle.
-An authorized copy must include these exact project-relative files:
-
-| Path | Purpose |
+| Path under `evidence/run5/` | Purpose |
 | --- | --- |
-| `src/main/resources/source/video5_vial_recipes.csv` | Recipe and vial records |
-| `src/main/resources/source/video5_source_contract.json` | Source-frame contract |
-| `src/main/resources/source/run5_process_context.json` | Recorded process context |
-| `src/main/resources/canonical/observations.csv` | Extracted appearance measurements |
-| `src/main/resources/canonical/observation_quality_falsifier.py` | Extraction source for audit |
-| `src/main/resources/canonical/observation_quality_falsifier_config.json` | Extraction configuration |
-| `src/main/resources/static/recipe7-evidence.svg` | Vial evidence image |
-| `src/main/resources/static/run5-tank-context.svg` | Process-context image |
-| `fixtures/source/video5_vial_recipes.csv` | Recipe fixture for data-dependent tests |
+| `source/video5_vial_recipes.csv` | Recipe and vial records |
+| `source/video5_source_contract.json` | Source-frame identity and time contract |
+| `source/run5_process_context.json` | Synchronized camera and timing context |
+| `canonical/observations.csv` | Extracted appearance observations |
+| `canonical/observation_quality_falsifier.py` | Extraction source for audit |
+| `canonical/observation_quality_falsifier_config.json` | Extraction configuration |
+| `static/recipe7-evidence.svg` | Vial evidence shown in the demonstration |
+| `static/run5-tank-context.svg` | Synchronized tank-view evidence |
 
-Obtain the organizer materials through the event's authorized channel and the
-matching derived replay bundle from its maintainers, subject to permission.
-The project does not provide a public download for these files.
-
-The replay checks the expected manifest, observation, configuration, extractor,
-and source identities. Expected hashes are defined in
-`CanonicalReplayService.java`; the frame contract has additional checks in
-`SourceContractEvidence.java`. Do not replace missing files with invented
-measurements or disable these checks to make a replay pass.
-
-After restoring the authorized bundle locally, rebuild and run all tests:
+`evidence/run5/SHA256SUMS` records the exact bundle bytes. To verify:
 
 ```sh
-mvn -Pcanonical-data clean verify
+(cd evidence/run5 && shasum -a 256 -c SHA256SUMS)
 ```
 
-This profile includes the data-dependent tests and fails when required assets
-are missing. It also activates automatically when
-`src/main/resources/canonical/observations.csv` exists.
+The replay verifies its expected manifest and observation identities and the
+recorded configuration, extractor, and source identities. Expected hashes are
+defined in `CanonicalReplayService.java`; the frame contract has additional
+checks in `SourceContractEvidence.java`. Verification is not evidence of
+physical validation or causal carryover.
 
-For a running full-data instance, the optional replay smoke test is:
+## Build and reproduce
+
+```sh
+mvn clean verify
+java -jar target/station3-investigator-0.2.0-SNAPSHOT.jar --server.address=127.0.0.1 --server.port=8080
+```
+
+The included evidence automatically activates the `canonical-data` test profile.
+The browser opens the real 30-vial, 10-recipe replay by default. The synthetic
+example is an optional, explicitly labeled alternative.
+
+For the packaged replay check:
 
 ```sh
 mkdir -p build/replay-check
 node tools/verify-release.cjs http://127.0.0.1:8080 build/replay-check
 ```
 
-It checks the replay API, evidence images, evaluation, and exports. It is not a
-test of the data-free distribution. Its output contains dataset-derived results
-and must remain local unless redistribution is authorized.
+This checks the replay API, evidence images, evaluation, and exports.
 
-## Publication boundary
+## Scope and rights
 
-The repository ignore rules exclude the asset paths, build output, reports,
-archives, and common local configuration files. Ignore rules do not remove
-files already tracked in Git. Review staged paths before publishing. Do not
-publish a JAR built after restoring the private assets.
+The bundle reproduces the demonstrated retrospective results. It does not
+include the complete original camera recordings, perform fresh video extraction
+on launch, provide independent defect labels, or establish physical-test results.
+The five-run inventory is not a claim that every original video is included.
+
+Organizer materials are separate from the team's MIT-licensed code. See
+[LICENSE_SCOPE.md](LICENSE_SCOPE.md) and [CREDITS_AND_REFERENCES.md](CREDITS_AND_REFERENCES.md).

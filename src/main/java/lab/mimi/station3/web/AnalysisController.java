@@ -42,8 +42,8 @@ public class AnalysisController {
             "station3-prototype-threshold-band-v1", 0.80, 2.0, 7.0, 10.0);
 
     @GetMapping("/health")
-    public Map<String, String> health() {
-        return Map.of("status", "ok", "service", "station3-investigator");
+    public Map<String, Object> health() {
+        return Map.of("status", "ok", "service", "station3-investigator", "capabilities", DataAvailability.inspect());
     }
 
     @GetMapping("/runs")
@@ -72,12 +72,13 @@ public class AnalysisController {
                 "recipeLabeled", recipeLabeled,
                 "cameraStreams", java.util.List.of("cap_seal", "tank_level", "vial_fill"),
                 "analysisStatus", recipeLabeled
-                        ? "VERIFIED_RECIPE_ANALYSIS"
-                        : "UNLABELED_SOURCE_AVAILABLE");
+                        ? DataAvailability.inspect().get("canonicalStatus")
+                        : "INVENTORY_ONLY_NO_RECIPE_LABELS");
     }
 
     @PostMapping("/analyze/canonical")
     public Map<String, Object> analyzeCanonical() throws IOException {
+        DataAvailability.requireReplay();
         var replay = CanonicalReplayService.run();
         var records = replay.manifest();
         ManifestValidator.requireWellFormed(records);
@@ -95,12 +96,26 @@ public class AnalysisController {
         return response;
     }
 
+    @PostMapping("/analyze/synthetic")
+    public Map<String, Object> analyzeSynthetic() throws IOException {
+        var replay = lab.mimi.station3.analysis.SyntheticReplayService.run();
+        var assessments = Station3Analyzer.analyze(replay.manifest(), replay.measurements(), POLICY);
+        var response = baseResponse("Synthetic example, not plant evidence", "SYNTHETIC_FIXTURE",
+                replay.manifest().size(), replay.measurements().size(), assessments.size(), assessments);
+        response.put("synthetic", true);
+        response.put("provenanceStatus", "SYNTHETIC_NOT_PLANT_EVIDENCE");
+        response.put("measurementOrigin", "TEAM_AUTHORED_SYNTHETIC_FIXTURE");
+        response.put("referenceMode", "ORDERED_VIAL_COMPARISON");
+        return response;
+    }
+
     @PostMapping(path = "/analyze", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Map<String, Object> analyzeUpload(
             @RequestParam MultipartFile sourceBundle,
             @RequestParam(defaultValue = "Uploaded source run") String label) throws IOException {
         requireZip(sourceBundle);
         String datasetLabel = normalizeLabel(label);
+        DataAvailability.requireUpload();
         Path workspace = createPrivateWorkspace();
         try {
             Path manifestPath = workspace.resolve("video5_vial_recipes.csv");

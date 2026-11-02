@@ -107,9 +107,9 @@ public final class Station3Analyzer {
             double laterPair = Ciede2000.between(laterOne.appearance(), laterTwo.appearance());
             WithinBatchMetrics withinBatchMetrics = new WithinBatchMetrics(
                     first.vial(), laterOne.vial(), laterTwo.vial(), vial1ToVial2, vial1ToVial3, laterPair,
-                    "station3-video5-third-vial-provisional-v1",
-                    "DATASET_2_VIDEO_5_LATER_VIAL_CONVENTION",
-                    "all three pairwise CIEDE2000 distances are reported; vial 3 is a provisional dataset-specific reference, not independent recipe truth");
+                    "station3-ordered-third-vial-provisional-v1",
+                    "ORDERED_VIAL_COMPARISON",
+                    "all three pairwise CIEDE2000 distances are reported; vial 3 is a provisional within-recipe reference, not independent recipe truth");
             double predecessorDistance = immediatePredecessorLaterMean == null
                     ? Double.NaN : Ciede2000.between(first.appearance(), immediatePredecessorLaterMean);
             InvestigationHypothesis hypothesis = immediatePredecessorLaterMean == null

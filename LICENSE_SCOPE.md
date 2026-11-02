@@ -9,10 +9,13 @@ It does not transfer ownership or claim ownership of third-party material.
 ## Organizer materials
 
 The MIT License does not cover organizer datasets, videos, extracted images,
-recipe records, or organizer-derived measurement files. Public redistribution
-permission has not been confirmed. These assets are excluded from the public
-source distribution; their presence in a private development or demonstration
-copy does not authorize redistribution.
+recipe records, or organizer-derived measurement files. The Run 5 demonstration
+bundle is included in `evidence/run5` and is attributed in
+[CREDITS_AND_REFERENCES.md](CREDITS_AND_REFERENCES.md).
+
+A separate public redistribution license for organizer materials has not been
+confirmed. Inclusion does not transfer ownership or grant MIT rights to those
+materials. Their original terms and rights holders remain applicable.
 
 ## Third-party software
 

@@ -8,6 +8,7 @@
 <p>Ten recipes from Run 5, evaluated by two rules using the same saved measurements. This compares decisions, not defect accuracy.</p>
 <h2>Baseline</h2><p>Alert when the first vial differs from the later-pair mean by at least 10 ΔE00. Otherwise report no alert. Missing values abstain.</p>
 <h2>Guarded analysis</h2><p>Keep that metric and cutoff. Also require a stable later pair (at most 2 ΔE00), accepted image quality, and review differences from 7 inclusive to 10 exclusive.</p>
+<p>These results use the bundled Run 5 replay evidence. The optional synthetic example does not reproduce this evaluation.</p>
 <p id="evaluation-status" role="status">Loading measured results...</p>
 </div></div><div class="table-wrap"><table><thead><tr><th>Recipe</th><th>First vs. later mean</th><th>Later pair</th><th>Baseline</th><th>Guarded</th></tr></thead><tbody id="evaluation-rows"></tbody></table></div>
 <div class="card-header"><div><h2>What this does not prove</h2>
@@ -16,6 +17,5 @@
 <p><a href="/api/evaluation" download="evaluation.json">Download comparison JSON</a></p>
 <h2>Adoption and costs</h2><p>Start in read-only shadow mode. Confirm camera alignment and recipe/time mapping, collect independently reviewed labels, calibrate thresholds, then compare review time and missed defects before any machine integration.</p>
 <p>Illustrative planning case, not measured savings: 20 reviews/day × 2 minutes saved × 250 days = 166.7 hours/year. At an assumed $35/hour, that is $5,833/year gross labor value. With assumed $3,000 setup and $1,000/year maintenance, first-year net is $1,833 and simple payback is 7.4 months. At zero minutes saved, first-year net is −$4,000. No scrap reduction is included.</p>
-<p>These assumed costs are not quotes. Extra cameras, PLC integration, validation and false-alert handling can increase cost or erase the benefit. BUSINESS_CASE.md contains the sensitivity table and acceptance plan.</p>
+<p>These assumed costs are not quotes. Extra cameras, PLC integration, validation and false-alert handling can increase cost or erase the benefit. Validate these assumptions locally before using this estimate.</p>
 </div></div></section></main><script src="/evaluation.js" defer></script></body></html>
-

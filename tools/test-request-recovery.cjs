@@ -10,12 +10,13 @@ function node(id) {
     addEventListener(type, fn) { this.handlers[type] = fn; },
     querySelector() { return node(id + '/child'); }, click() {} };
 }
-const context = { document: { querySelector: node }, fetch: async () => ({ok:true,json:async()=>({})}),
+const context = { document: { querySelector: node }, fetch: async () => ({ok:true,json:async()=>({capabilities:{canonicalAvailable:true,uploadAvailable:true,cameraEvidenceAvailable:true}})}),
   TypeError, Error, Number, Date, String, FormData: class {} };
 vm.createContext(context);
 vm.runInContext(source, context);
 const evaluate = text => vm.runInContext(text, context);
 (async () => {
+  await new Promise(resolve => setImmediate(resolve));
   // A previously successful report must not survive either network-failure path.
   for (const selector of ['#canonical-submit', '#analysis-form']) {
     evaluate('latestResult = {old:true}; results.hidden = false');
@@ -47,5 +48,25 @@ const evaluate = text => vm.runInContext(text, context);
   assert.equal(evaluate('latestResult'), payload);
   assert.equal(node('#results').hidden, false);
   assert.match(node('#message').textContent, /Done/);
-  console.log('PASS: canonical/upload network failures, server error, malformed JSON, rendering failure, and successful retry');
+  // Public mode must neither fetch restricted analysis nor expose stale results.
+  context.fetch = async () => ({ok:true,json:async()=>({capabilities:{
+    canonicalAvailable:false,uploadAvailable:false,cameraEvidenceAvailable:false}})});
+  await context.initialize();
+  assert.equal(node('#canonical-submit').disabled, true);
+  assert.equal(node('#upload-submit').disabled, true);
+  assert.match(node('#availability-message').textContent, /not installed/);
+  let forbiddenCalls = 0;
+  context.fetch = async () => { forbiddenCalls++; throw new Error('Unexpected restricted request'); };
+  await node('#canonical-submit').handlers.click();
+  await node('#analysis-form').handlers.submit({preventDefault(){}});
+  assert.equal(forbiddenCalls, 0);
+  const synthetic = {synthetic:true,measurementRows:6,assessmentCount:2,evidenceType:'SYNTHETIC_FIXTURE'};
+  context.fetch = async () => ({ok:true,json:async()=>synthetic});
+  await node('#synthetic-submit').handlers.click();
+  assert.equal(evaluate('latestResult'), synthetic);
+  assert.match(node('#message').textContent, /synthetic, not plant evidence/);
+  assert.equal(node('#canonical-brief').hidden, true);
+  assert.equal(node('#canonical-evidence').hidden, true);
+  assert.equal(node('#synthetic-submit').disabled, false);
+  console.log('PASS: public synthetic mode, disabled restricted requests, canonical/upload network failures, server error, malformed JSON, rendering failure, and successful retry');
 })().catch(error => { console.error(error); process.exitCode = 1; });

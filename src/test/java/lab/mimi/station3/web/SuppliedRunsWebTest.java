@@ -28,7 +28,7 @@ class SuppliedRunsWebTest {
                 .andExpect(jsonPath("$.runs.length()").value(5))
                 .andExpect(jsonPath("$.runs[0].vialCount").value(19))
                 .andExpect(jsonPath("$.runs[4].recipeLabeled").value(true))
-                .andExpect(jsonPath("$.runs[4].analysisStatus").value("VERIFIED_RECIPE_ANALYSIS"));
+                .andExpect(jsonPath("$.runs[4].analysisStatus").value(DataAvailability.inspect().get("canonicalStatus")));
     }
 
     @Test
@@ -44,7 +44,7 @@ class SuppliedRunsWebTest {
         org.junit.jupiter.api.Assertions.assertTrue(page.contains("Only Run 5 has recipe labels"));
         org.junit.jupiter.api.Assertions.assertTrue(page.contains("id=\"run-rows\""));
         org.junit.jupiter.api.Assertions.assertTrue(script.contains("fetch('/api/runs')"));
-        org.junit.jupiter.api.Assertions.assertTrue(script.contains("Source available for labeling"));
+        org.junit.jupiter.api.Assertions.assertTrue(script.contains("Inventory only, no recipe labels"));
     }
 
     @Test

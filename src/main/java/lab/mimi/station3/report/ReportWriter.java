@@ -107,6 +107,15 @@ public final class ReportWriter {
 
     private static String displayNumber(double value) { return Double.isFinite(value) ? String.format(Locale.ROOT, "%.3f", value) : "Unavailable"; }
     private static String number(double value) { return Double.isFinite(value) ? String.format(Locale.ROOT, "%.3f", value) : "null"; }
-    private static String escape(String value) { return value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n"); }
+    private static String escape(String value) {
+        StringBuilder escaped = new StringBuilder();
+        for (int i = 0; i < value.length(); i++) {
+            char c = value.charAt(i);
+            if (c == '"' || c == '\\') escaped.append('\\').append(c);
+            else if (c < 0x20) escaped.append(String.format(Locale.ROOT, "\\u%04x", (int) c));
+            else escaped.append(c);
+        }
+        return escaped.toString();
+    }
     private static String escapeHtml(String value) { return value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;"); }
 }

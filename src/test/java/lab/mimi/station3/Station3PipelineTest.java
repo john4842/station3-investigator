@@ -312,7 +312,7 @@ class Station3PipelineTest {
     @Tag("organizer-data")
     @Test
     void actualVideo5ManifestParsesThirtyRowsAsTenGroupsOfThree() throws Exception {
-        var records = CsvIngestor.readManifest(Path.of("fixtures/source/video5_vial_recipes.csv"));
+        var records = CsvIngestor.readManifest(Path.of("evidence/run5/source/video5_vial_recipes.csv"));
         ManifestValidator.requireWellFormed(records);
 
         assertEquals(30, records.size());
@@ -437,4 +437,3 @@ class Station3PipelineTest {
                 "config-sha256", "synthetic-lab-extractor-v1", "source-sha256");
     }
 }
-

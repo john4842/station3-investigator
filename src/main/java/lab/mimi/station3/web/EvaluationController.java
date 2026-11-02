@@ -10,6 +10,7 @@ import java.util.*;
 public class EvaluationController {
     @GetMapping("/api/evaluation")
     public Map<String, Object> evaluate() throws IOException {
+        DataAvailability.requireReplay();
         var replay = CanonicalReplayService.run();
         var policy = new AnalysisPolicy("station3-prototype-threshold-band-v1", 0.8, 2, 7, 10);
         var assessments = Station3Analyzer.analyze(replay.manifest(), replay.observations().measurements(), policy);

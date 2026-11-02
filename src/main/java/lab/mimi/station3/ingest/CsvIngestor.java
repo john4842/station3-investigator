@@ -24,6 +24,9 @@ public final class CsvIngestor {
         for (int i = 1; i < lines.size(); i++) {
             if (lines.get(i).isBlank()) continue;
             List<String> cells = split(lines.get(i));
+            if (cells.size() != header.size()) {
+                throw new IllegalArgumentException("CSV column count differs from header at " + path + ":" + (i + 1));
+            }
             String ref = path + ":" + (i + 1);
             result.add(new VialRecord(
                     integer(cells, header.get("vial"), ref),
@@ -47,6 +50,9 @@ public final class CsvIngestor {
         for (int i = 1; i < lines.size(); i++) {
             if (lines.get(i).isBlank()) continue;
             List<String> cells = split(lines.get(i));
+            if (cells.size() != header.size()) {
+                throw new IllegalArgumentException("CSV column count differs from header at " + path + ":" + (i + 1));
+            }
             String ref = path + ":" + (i + 1);
             result.add(new VialMeasurement(
                     integer(cells, header.get("vial"), ref),
@@ -66,7 +72,13 @@ public final class CsvIngestor {
     private static Map<String, Integer> header(String line) {
         List<String> names = split(line);
         Map<String, Integer> result = new HashMap<>();
-        for (int i = 0; i < names.size(); i++) result.put(names.get(i).trim(), i);
+        for (int i = 0; i < names.size(); i++) {
+            String name = names.get(i).trim();
+            if (name.isEmpty()) throw new IllegalArgumentException("CSV column name is blank");
+            if (result.putIfAbsent(name, i) != null) {
+                throw new IllegalArgumentException("duplicate CSV column: " + name);
+            }
+        }
         return result;
     }
 

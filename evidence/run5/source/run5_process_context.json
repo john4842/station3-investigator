@@ -1,0 +1,52 @@
+{
+  "schema": "station3-run5-process-context/v1",
+  "claimBoundary": "descriptive context from the supplied Run 5 packet; not a defect label, volume measurement, causal finding, or held-out model evaluation",
+  "crossCamera": {
+    "joinStatus": "EXACT_INDEX_TIMESTAMP",
+    "videoId": 5,
+    "timestamp": "2026-09-23 19:52:17.231150",
+    "videoSeconds": 307.231,
+    "vial": 7,
+    "recipeId": 7,
+    "views": [
+      {
+        "camera": "vial_fill",
+        "videoId": 5,
+        "timestamp": "2026-09-23 19:52:17.231150",
+        "filename": "vial_fill_20260923_195217_231150.jpg",
+        "indexSha256": "f531c17b9ddb24d15e6277f5b85d3e651aa71117ca162add2bd7b1e2102f069c",
+        "imageSha256": "c25c46ffe1a51133c1ce5714e4a27c45d07aa47cc3011b800217cffed3b92004"
+      },
+      {
+        "camera": "tank_level",
+        "videoId": 5,
+        "timestamp": "2026-09-23 19:52:17.231150",
+        "filename": "tank_level_20260923_195217_231150.jpg",
+        "indexSha256": "2bdbe4176ec19640af2caf4cae73b8c2397e4b78d684c46bb9d399841c3fc53a",
+        "imageSha256": "f0f086b15ba6bc53bc65d6224be501d54a40ab2242c837aa9929a380de080898"
+      },
+      {
+        "camera": "cap_seal",
+        "videoId": 5,
+        "timestamp": "2026-09-23 19:52:17.231150",
+        "filename": "cap_seal_20260923_195217_231150.jpg",
+        "indexSha256": "77c7e551e82d6b22ac500bd5def480edf389882cfe8e319a3b7b769c3ed9d7cb",
+        "imageSha256": "af4288a8550e98a1781abb5fb51bb402716c69dabae940dcb149e33cae6a4d41"
+      }
+    ],
+    "displayAsset": "/run5-tank-context.svg",
+    "interpretation": "the three indexed views share one recorded timestamp; the tank view provides visible color and gross-state context only",
+    "limit": "the tank view cannot establish chemical identity or the quantity dispensed into vial 7; the cap view is not attributed to vial 7 without a proven transport join"
+  },
+  "timingModel": {
+    "sample": "30 labeled Run 5 vials",
+    "source": "artifacts/findings.md",
+    "sourceSha256": "b8defff9cfcaed0ce0e85f5600359a8da757b7c1081725def4a737a606b981a7",
+    "analysisCodeSha256": "1f1a57badaf5763ad1fd99cc54938dda39f5ec8a017f196130f0c8b871dd49c7",
+    "totalVolumeOnlyR2": 0.264,
+    "perTankVolumesAndActiveComponentCountR2": 0.925,
+    "activeComponentTermSecondsApprox": 9.65,
+    "interpretation": "fill duration depends on component mix in this run; the fit is descriptive same-run evidence, not held-out prediction or measured dosing"
+  },
+  "datasetReadmeSha256": "527a4fc005a761bf6094ae926911a7249689ba4510954c98a61038897c0fb00a"
+}

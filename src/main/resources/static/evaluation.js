@@ -1,6 +1,6 @@
 'use strict';
 fetch('/api/evaluation').then(r => {
-  if (!r.ok) throw new Error('Comparison unavailable');
+  if (!r.ok) return r.json().then(error => { throw new Error(error.message || 'Comparison unavailable'); });
   return r.json();
 }).then(data => {
   if (!Array.isArray(data.rows) || data.rows.length !== data.denominator) throw new Error('Incomplete comparison');
@@ -16,8 +16,7 @@ fetch('/api/evaluation').then(r => {
   }
   document.querySelector('#evaluation-rows').replaceChildren(fragment);
   document.querySelector('#evaluation-status').textContent = data.changedDecisions + ' of ' + data.denominator + ' decisions change. These are measured decision differences, not an accuracy improvement.';
-}).catch(() => {
+}).catch(error => {
   document.querySelector('#evaluation-rows').replaceChildren();
-  document.querySelector('#evaluation-status').textContent = 'Comparison unavailable. No results are shown.';
+  document.querySelector('#evaluation-status').textContent = 'Comparison unavailable: ' + error.message + '. No results are shown.';
 });
-

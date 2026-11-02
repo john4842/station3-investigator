@@ -14,11 +14,13 @@ Color differences are observations, not proof of carryover or recipe correctness
 - Synthetic fixtures and automated tests.
 - Source-identity checks for the original Run 5 replay.
 
-Organizer data, videos, extracted images, and derived measurement files are
-**not included**. Public redistribution permission has not been confirmed.
-The synthetic example below works without them. The full browser replay,
-evaluation, and source-upload analysis require the files listed in
-[SOURCE_ASSETS.md](SOURCE_ASSETS.md).
+The repository includes the **Run 5 evidence used in the recorded demonstration**:
+recipe records, derived measurements, source-frame and process context, and both
+evidence images. The default browser view reproduces the real replay, not a
+synthetic substitute. Complete original camera recordings are not bundled.
+See [evidence inventory](SOURCE_ASSETS.md) and [license scope](LICENSE_SCOPE.md).
+
+[Watch the recorded demonstration](https://youtu.be/1jelBgI89Yg).
 
 ## Build and test
 
@@ -28,9 +30,9 @@ Install JDK 21 and Maven 3.9 or later. Run from the repository root:
 mvn verify
 ```
 
-Without organizer assets, this runs 44 data-independent JUnit tests and builds
-the application. Tests tagged `organizer-data` are excluded, not counted as
-passing. Maven needs internet access on the first build to download dependencies.
+The included evidence activates the full test suite, including Run 5 replay and
+evidence-contract tests. Maven needs internet access on the first build to
+download dependencies.
 
 For the JavaScript request-recovery checks, install Node.js 18 or later:
 
@@ -56,11 +58,19 @@ recipes; it does not reproduce the organizer dataset.
 java -jar target/station3-investigator-0.2.0-SNAPSHOT.jar --server.address=127.0.0.1 --server.port=8080
 ```
 
-Open `http://127.0.0.1:8080`. Without the excluded assets, the server and static
-pages start, but the Run 5 analysis and evaluation are unavailable and the
-evidence images are absent. A ZIP upload alone does not replace the required
-recipe records. See [SOURCE_ASSETS.md](SOURCE_ASSETS.md) before using these
-features.
+Open `http://127.0.0.1:8080`. The dashboard verifies and analyzes the bundled Run 5
+evidence automatically: **30 vial measurements across 10 recipes**, with the
+camera images and process context shown in the demonstration. Results can be
+downloaded as JSON or HTML.
+
+The optional synthetic example uses six invented measurements across two recipes.
+It is labeled separately and is not plant evidence.
+
+Camera images and the Run 5 decision brief appear after verification succeeds.
+If the replay bundle is removed, Run 5 controls are disabled and the app falls
+back to the labeled synthetic example. Missing-data requests return HTTP 503
+with `data_unavailable`, not an empty or invented result.
+See [SOURCE_ASSETS.md](SOURCE_ASSETS.md) for bundle verification.
 
 This is a local review tool, not a public upload service. Authentication and
 production deployment controls are outside its scope.

@@ -13,9 +13,12 @@ Hackathon, sponsored by Rockwell Automation and NVIDIA, using the MSOE event
 materials and CSI Station 3 fluid-mixing problem.
 
 The original investigation used Dataset 2, including Run 5 recipe labels,
-supplied camera recordings, and derived appearance measurements. These
-materials are excluded from the public source distribution. See
-[SOURCE_ASSETS.md](SOURCE_ASSETS.md).
+supplied camera recordings, and derived appearance measurements. The repository
+includes the Run 5 recipe records, derived measurements, evidence images,
+source-frame contract, and process context used by the recorded demonstration.
+The complete original camera recordings are not bundled. See
+[SOURCE_ASSETS.md](SOURCE_ASSETS.md) for the inventory and
+[LICENSE_SCOPE.md](LICENSE_SCOPE.md) for the separate organizer-material rights.
 
 ## Method
 

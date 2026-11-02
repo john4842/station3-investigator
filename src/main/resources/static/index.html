@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/runs.css">
   <link rel="stylesheet" href="/executive.css">
   <link rel="stylesheet" href="/evidence.css">
+  <style>[hidden] { display: none !important; }</style>
 </head>
 <body>
   <header class="app-header">
@@ -27,7 +28,7 @@
   <main class="page-shell">
     <section class="page-intro" aria-labelledby="page-title">
       <div>
-        <p class="overline">Run 5 · recorded measurements</p>
+        <p class="overline">Retrospective color comparison</p>
         <h1 id="page-title">Find first-vial changes after a recipe switch</h1>
         <p class="page-intro__copy">Run 5 contains 30 labeled vials. The app compares the first vial in each recipe with the next two and points to transitions worth checking.</p>
       </div>
@@ -38,7 +39,7 @@
       </aside>
     </section>
 
-    <section class="card decision-card" aria-labelledby="decision-title">
+    <section id="canonical-brief" hidden class="card decision-card" aria-labelledby="decision-title">
       <div class="decision-card__lead">
         <div>
           <p class="section-label">Result</p>
@@ -75,7 +76,7 @@
       </div>
     </section>
 
-    <section class="card evidence-card" aria-labelledby="evidence-title">
+    <section id="canonical-evidence" hidden class="card evidence-card" aria-labelledby="evidence-title">
       <div class="card-header">
         <div>
           <p class="section-label">Camera evidence</p>
@@ -85,7 +86,7 @@
         <span class="format-note">Video 5 · fill camera</span>
       </div>
       <figure class="evidence-card__figure">
-        <img class="evidence-card__image" src="/recipe7-evidence.svg" width="1960" height="570" alt="Source frames showing vial 7 as dark green and vials 8 and 9 as bright blue">
+        <img class="evidence-card__image" data-src="/recipe7-evidence.svg" width="1960" height="570" alt="Source frames showing vial 7 as dark green and vials 8 and 9 as bright blue">
         <figcaption>These frames were used by the analysis and were captured before each fill ended. They show a difference. They do not establish the cause or prove which vial is correct.</figcaption>
       </figure>
       <div class="evidence-card__facts" aria-label="Recipe 7 evidence summary">
@@ -97,7 +98,7 @@
         <summary>Synchronized process context</summary>
         <div class="context-details__grid">
           <figure>
-            <img src="/run5-tank-context.svg" width="640" height="480" alt="Run 5 tank view recorded at the same indexed timestamp as a sampled vial 7 fill frame">
+            <img data-src="/run5-tank-context.svg" width="640" height="480" alt="Run 5 tank view recorded at the same indexed timestamp as a sampled vial 7 fill frame">
             <figcaption><span id="context-timestamp">Checking timestamp</span>. Visible tank state only, not a per-vial volume measurement.</figcaption>
           </figure>
           <div class="context-details__copy">
@@ -152,8 +153,19 @@
             <tbody id="run-rows"></tbody>
           </table>
         </div>
-        <p class="dataset-note">Their footage remains available for future labeling.</p>
+        <p class="dataset-note">This table describes the supplied dataset. The repository includes the Run 5 replay bundle, not the complete recordings from all five runs. Runs 1–4 have no recipe-level results.</p>
       </div>
+    </section>
+
+    <section class="card" aria-labelledby="availability-title">
+      <div class="card-header">
+        <div><p class="section-label">Local data</p><h2 id="availability-title">Analysis availability</h2>
+          <p id="availability-message" role="status">Checking installed data. No Run 5 results have been verified.</p>
+          <p>The bundled Run 5 replay uses the same measurements and evidence images as the recorded demonstration. The optional synthetic example is separate and is not plant evidence.</p>
+        </div>
+        <button id="synthetic-submit" class="primary-button" type="button">Run synthetic example</button>
+      </div>
+      <noscript>Enable JavaScript to run the browser demonstration. The command-line synthetic example is documented in README.md.</noscript>
     </section>
 
     <section class="card" aria-labelledby="canonical-title">
@@ -170,7 +182,7 @@
           <strong>Quality checks</strong>
           <span>white reference, liquid occupancy, vial walls, occlusion, clipping, focus, and temporal stability</span>
         </div>
-        <button id="canonical-submit" class="primary-button" type="button"><span>Run analysis</span><span aria-hidden="true">→</span></button>
+        <button id="canonical-submit" disabled class="primary-button" type="button"><span>Run analysis</span><span aria-hidden="true">→</span></button>
       </div>
       <p id="message" class="form-message" role="status" aria-live="polite"></p>
     </section>
@@ -193,7 +205,7 @@
         <div class="form-footer">
           <label class="field" for="label"><span>Run name</span><input id="label" name="label" type="text" value="Uploaded source run" maxlength="100" autocomplete="off"></label>
           <div class="checkbox-control"><span><strong>Unverified source</strong><small>Measurements may be shown, but classification remains withheld</small></span></div>
-          <button id="upload-submit" class="secondary-button" type="submit">Analyze upload</button>
+          <button id="upload-submit" disabled class="secondary-button" type="submit">Analyze upload</button>
         </div>
       </form>
     </details>
@@ -218,7 +230,7 @@
     </section>
   </main>
 
-  <footer class="app-footer"><span>Station 3 Investigator</span><span>Five supplied runs · verified labels on Run 5 · no machine-learning model</span></footer>
+  <footer class="app-footer"><span>Station 3 Investigator</span><span>Five supplied runs · bundled Run 5 evidence · no machine-learning model</span></footer>
   <script src="/executive.js" defer></script>
   <script src="/runs.js" defer></script>
   <script src="/app.js" defer></script>

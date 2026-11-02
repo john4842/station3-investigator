@@ -20,6 +20,13 @@ public class ApiExceptionHandler {
                 "timestamp", Instant.now()));
     }
 
+    @ExceptionHandler(DataAvailability.Unavailable.class)
+    public ResponseEntity<Map<String, Object>> unavailable(DataAvailability.Unavailable error) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(Map.of(
+                "status", 503, "error", "data_unavailable",
+                "message", error.getMessage(), "timestamp", Instant.now()));
+    }
+
     private static String safeMessage(Exception error) {
         String message = error.getMessage();
         return message == null || message.isBlank() ? error.getClass().getSimpleName() : message;
