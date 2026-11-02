@@ -1,0 +1,38 @@
+# Build output and generated reports
+/target/
+/build/
+/release/
+*.class
+*.jar
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# Organizer data and derived media
+/src/main/resources/canonical/
+/src/main/resources/source/
+/src/main/resources/static/recipe7-evidence.svg
+/src/main/resources/static/run5-tank-context.svg
+/fixtures/source/
+
+# Local IDE and operating-system files
+/.classpath
+/.project
+/.settings/
+/.idea/
+/.vscode/
+*.iml
+.DS_Store
+._*
+__MACOSX/
+*.log
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx

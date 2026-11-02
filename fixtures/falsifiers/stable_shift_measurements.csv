@@ -1,0 +1,7 @@
+vial,l_star,a_star,b_star,image_quality,source_ref,config_hash,extractor_version,source_hash
+1,50.0,0.0,0.0,0.99,probe:vial-1,probe-config-sha256,probe-lab-v1,probe-source-sha256
+2,50.0,0.0,0.0,0.99,probe:vial-2,probe-config-sha256,probe-lab-v1,probe-source-sha256
+3,50.0,0.0,0.0,0.99,probe:vial-3,probe-config-sha256,probe-lab-v1,probe-source-sha256
+4,70.0,40.0,20.0,0.99,probe:vial-4,probe-config-sha256,probe-lab-v1,probe-source-sha256
+5,70.0,40.0,20.0,0.99,probe:vial-5,probe-config-sha256,probe-lab-v1,probe-source-sha256
+6,70.0,40.0,20.0,0.99,probe:vial-6,probe-config-sha256,probe-lab-v1,probe-source-sha256

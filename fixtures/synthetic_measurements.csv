@@ -1,0 +1,7 @@
+vial,l_star,a_star,b_star,image_quality,source_ref,config_hash,extractor_version,source_hash
+1,50.0,0.0,0.0,0.96,synthetic:vial-1:frame-window,synthetic-config-sha256,synthetic-lab-v1,synthetic-source-sha256
+2,50.0,0.0,0.0,0.95,synthetic:vial-2:frame-window,synthetic-config-sha256,synthetic-lab-v1,synthetic-source-sha256
+3,50.0,0.0,0.0,0.94,synthetic:vial-3:frame-window,synthetic-config-sha256,synthetic-lab-v1,synthetic-source-sha256
+4,50.0,0.0,0.0,0.97,synthetic:vial-4:frame-window,synthetic-config-sha256,synthetic-lab-v1,synthetic-source-sha256
+5,70.0,30.0,20.0,0.96,synthetic:vial-5:frame-window,synthetic-config-sha256,synthetic-lab-v1,synthetic-source-sha256
+6,70.0,30.0,20.0,0.95,synthetic:vial-6:frame-window,synthetic-config-sha256,synthetic-lab-v1,synthetic-source-sha256

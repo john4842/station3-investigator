@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Review all five supplied Station 3 runs and the verified Video 5 recipe analysis">
+  <title>Station 3 Investigator</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/canonical.css">
+  <link rel="stylesheet" href="/runs.css">
+  <link rel="stylesheet" href="/executive.css">
+  <link rel="stylesheet" href="/evidence.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="app-header__inner">
+      <a class="brand" href="/" aria-label="Station 3 Investigator home">
+        <span class="brand__mark" aria-hidden="true">S3</span>
+        <span><strong>Station 3 Investigator</strong><small>Recipe changeover investigation</small></span>
+      </a>
+      <div id="health" class="service-status" role="status">
+        <span class="service-status__dot" aria-hidden="true"></span><span>Checking service</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-intro" aria-labelledby="page-title">
+      <div>
+        <p class="overline">Run 5 · recorded measurements</p>
+        <h1 id="page-title">Find first-vial changes after a recipe switch</h1>
+        <p class="page-intro__copy">Run 5 contains 30 labeled vials. The app compares the first vial in each recipe with the next two and points to transitions worth checking.</p>
+      </div>
+      <aside class="method-card" aria-label="Dataset coverage">
+        <span>Supplied dataset inventory</span>
+        <strong>5 runs · 64 vials</strong>
+        <small>15 synchronized camera streams</small>
+      </aside>
+    </section>
+
+    <section class="card decision-card" aria-labelledby="decision-title">
+      <div class="decision-card__lead">
+        <div>
+          <p class="section-label">Result</p>
+          <h2 id="decision-title">Review the Recipe 6 to 7 switch</h2>
+          <p>Vial 7 looks different from vials 8 and 9. Check the changeover. Do not reject product or claim contamination from this result alone.</p>
+        </div>
+        <span id="decision-status" class="decision-status">Verifying evidence</span>
+      </div>
+      <div class="finding-grid">
+        <article class="finding finding--primary">
+          <span>Vial 7 vs. vial 9</span>
+          <strong id="finding-first">...</strong>
+          <small>ΔE00</small>
+        </article>
+        <article class="finding">
+          <span>Vial 8 vs. vial 9</span>
+          <strong id="finding-later">...</strong>
+          <small>ΔE00</small>
+        </article>
+        <article class="finding">
+          <span>No shift detected</span>
+          <strong id="finding-stable">...</strong>
+          <small>Recipes 8–11</small>
+        </article>
+        <article class="finding finding--caution">
+          <span>Needs review</span>
+          <strong id="finding-sensitive">...</strong>
+          <small>Recipe 13</small>
+        </article>
+      </div>
+      <div class="action-strip">
+        <div><span>Next step</span><strong>Inspect the Recipe 6 to 7 changeover and first-vial handling.</strong></div>
+        <div><span>Limit</span><strong>This is a review signal, not a reject decision or root-cause finding.</strong></div>
+      </div>
+    </section>
+
+    <section class="card evidence-card" aria-labelledby="evidence-title">
+      <div class="card-header">
+        <div>
+          <p class="section-label">Camera evidence</p>
+          <h2 id="evidence-title">What the camera recorded</h2>
+          <p>Vial 7 is the first Recipe 7 fill. Vials 8 and 9 are the next two.</p>
+        </div>
+        <span class="format-note">Video 5 · fill camera</span>
+      </div>
+      <figure class="evidence-card__figure">
+        <img class="evidence-card__image" src="/recipe7-evidence.svg" width="1960" height="570" alt="Source frames showing vial 7 as dark green and vials 8 and 9 as bright blue">
+        <figcaption>These frames were used by the analysis and were captured before each fill ended. They show a difference. They do not establish the cause or prove which vial is correct.</figcaption>
+      </figure>
+      <div class="evidence-card__facts" aria-label="Recipe 7 evidence summary">
+        <div><span>Vial 7 vs. 9</span><strong>13.525 ΔE00</strong></div>
+        <div><span>Vial 8 vs. 9</span><strong>0.798 ΔE00</strong></div>
+        <div><span>Action</span><strong>Review the transition</strong></div>
+      </div>
+      <details class="context-details">
+        <summary>Synchronized process context</summary>
+        <div class="context-details__grid">
+          <figure>
+            <img src="/run5-tank-context.svg" width="640" height="480" alt="Run 5 tank view recorded at the same indexed timestamp as a sampled vial 7 fill frame">
+            <figcaption><span id="context-timestamp">Checking timestamp</span>. Visible tank state only, not a per-vial volume measurement.</figcaption>
+          </figure>
+          <div class="context-details__copy">
+            <h3>What this adds</h3>
+            <p id="context-join">Checking the three camera indexes.</p>
+            <h3>Timing check</h3>
+            <p id="context-timing">Checking the Run 5 timing evidence.</p>
+            <h3>Source contract</h3>
+            <p id="context-contract">Checking the indexed-frame ledger.</p>
+            <p class="context-limit">These are supporting checks. They do not change the Recipe 7 result or prove carryover.</p>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="card" aria-labelledby="walkthrough-title">
+      <div class="card-header">
+        <div>
+          <p class="section-label">Method</p>
+          <h2 id="walkthrough-title">How it works</h2>
+        </div>
+      </div>
+      <div class="action-strip">
+        <div><span>1 · Measure</span><strong>Sample the same region from each labeled fill.</strong></div>
+        <div><span>2 · Compare</span><strong>Compare the first vial with the next two using ΔE00.</strong></div>
+        <div><span>3 · Decide</span><strong>Flag a switch only when the first vial differs and the later pair agrees. Otherwise, abstain.</strong></div>
+      </div>
+      <div class="card-header">
+        <div><h3>Current limit</h3><p>This prototype analyzes saved Run 5 measurements. It does not process a live camera feed. Production thresholds and accuracy still need independent evaluation.</p><p><a href="/evaluation.html">View evaluation details</a></p></div>
+      </div>
+    </section>
+
+    <section class="scope-banner" aria-label="Result limits">
+      <strong>Coverage</strong>
+      <span>Five runs were supplied. Only Run 5 has recipe labels, so only Run 5 receives recipe-level results.</span>
+    </section>
+
+    <section class="card dataset-card" aria-labelledby="dataset-title">
+      <div class="card-header">
+        <div>
+          <p class="section-label">Supplied runs</p>
+          <h2 id="dataset-title">Dataset coverage</h2>
+          <p>Runs 1–4 stay visible but unclassified because their vial-to-recipe labels were not supplied.</p>
+        </div>
+        <span id="dataset-load-status" class="format-note">Loading manifest</span>
+      </div>
+      <div id="dataset-summary" class="dataset-summary" aria-label="Dataset totals"></div>
+      <div class="table-section run-table-section">
+        <div class="table-wrap">
+          <table class="run-table">
+            <thead><tr><th scope="col">Run</th><th scope="col">Duration</th><th scope="col">Vials</th><th scope="col">Camera streams</th><th scope="col">Recipe labels</th><th scope="col">Current use</th></tr></thead>
+            <tbody id="run-rows"></tbody>
+          </table>
+        </div>
+        <p class="dataset-note">Their footage remains available for future labeling.</p>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="canonical-title">
+      <div class="card-header">
+        <div>
+          <p class="section-label">Labeled analysis</p>
+          <h2 id="canonical-title">Run 5 analysis</h2>
+          <p>Run the saved measurements through the same quality checks and comparison rules.</p>
+        </div>
+        <span class="format-note">Run 5 · 30 labeled vials</span>
+      </div>
+      <div class="canonical-action">
+        <div class="canonical-action__detail">
+          <strong>Quality checks</strong>
+          <span>white reference, liquid occupancy, vial walls, occlusion, clipping, focus, and temporal stability</span>
+        </div>
+        <button id="canonical-submit" class="primary-button" type="button"><span>Run analysis</span><span aria-hidden="true">→</span></button>
+      </div>
+      <p id="message" class="form-message" role="status" aria-live="polite"></p>
+    </section>
+
+    <details class="card upload-card">
+      <summary><span><strong>Inspect an unverified upload</strong><small>Upload results always abstain from recipe classification</small></span><span aria-hidden="true">+</span></summary>
+      <form id="analysis-form">
+        <div class="file-list">
+          <label class="file-control" for="sourceBundle">
+            <span class="file-control__index">ZIP</span>
+            <span class="file-control__body">
+              <strong>Source frame archive</strong>
+              <small><code>video5_frame_labels.csv</code> plus referenced JPEG or PNG frames</small>
+              <span id="source-bundle-name" class="file-control__selection">No file selected</span>
+            </span>
+            <span class="file-control__action">Choose ZIP</span>
+            <input id="sourceBundle" name="sourceBundle" type="file" accept=".zip,application/zip" required>
+          </label>
+        </div>
+        <div class="form-footer">
+          <label class="field" for="label"><span>Run name</span><input id="label" name="label" type="text" value="Uploaded source run" maxlength="100" autocomplete="off"></label>
+          <div class="checkbox-control"><span><strong>Unverified source</strong><small>Measurements may be shown, but classification remains withheld</small></span></div>
+          <button id="upload-submit" class="secondary-button" type="submit">Analyze upload</button>
+        </div>
+      </form>
+    </details>
+
+    <section id="results" class="card results-card" aria-labelledby="results-title" hidden>
+      <div class="card-header results-header">
+        <div><p class="section-label">Results</p><h2 id="results-title">Recipe results</h2><p id="result-context">Analysis complete</p></div>
+        <div class="download-actions"><button id="download" class="secondary-button" type="button">Download JSON</button><button id="download-html" class="secondary-button" type="button">Download HTML</button></div>
+      </div>
+      <div id="summary" class="summary-grid" aria-label="Result totals"></div>
+      <div id="receipt" class="receipt" hidden></div>
+      <div id="investigation-details" class="table-section"></div>
+      <div class="table-section">
+        <div class="table-section__header"><h3>Recipes</h3><span>ΔE00 values rounded to three decimals</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Recipe</th><th scope="col">Quality</th><th scope="col">Result</th><th scope="col">Batch consistency</th><th scope="col">Recipe conformity</th><th scope="col">Valid vials</th><th scope="col">Vial 1–2</th><th scope="col">Vial 1–3</th><th scope="col">Vial 2–3</th><th scope="col">Vial 1 vs. later mean</th><th scope="col">Predecessor distance</th><th scope="col">Reference use</th></tr></thead>
+            <tbody id="assessment-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer"><span>Station 3 Investigator</span><span>Five supplied runs · verified labels on Run 5 · no machine-learning model</span></footer>
+  <script src="/executive.js" defer></script>
+  <script src="/runs.js" defer></script>
+  <script src="/app.js" defer></script>
+</body>
+</html>
